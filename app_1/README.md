@@ -1,68 +1,85 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# app_1
 
-## Available Scripts
+A small React starter app, migrated from the legacy Create React App (CRA) setup to a modern Vite-based stack.
 
-In the project directory, you can run:
+## Stack
 
-### `npm start`
+| Area     | Tool                                  |
+| -------- | ------------------------------------- |
+| Build    | Vite 8                                |
+| UI       | React 19 (`createRoot`, `StrictMode`) |
+| Lint     | ESLint 9 (flat config)                |
+| Format   | Prettier 3                            |
+| Tests    | Vitest 4 + Testing Library            |
+| Test env | jsdom                                 |
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Security
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+`npm audit` reports **0 vulnerabilities** (down from **223** in the original CRA `react-scripts@3.2.0` stack — 21 critical, 65 high, 128 moderate, 9 low). All of those came from transitive build-tool dependencies that no longer exist after the move to Vite.
 
-### `npm test`
+## Requirements
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- Node.js >= 20
+- npm >= 10
 
-### `npm run build`
+## Quick start
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```bash
+npm install
+npm run dev      # start the dev server at http://localhost:3000
+```
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+## Scripts
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+| Script                 | What it does                          |
+| ---------------------- | ------------------------------------- |
+| `npm run dev`          | Start the Vite dev server (port 3000) |
+| `npm run build`        | Production build into `dist/`         |
+| `npm run preview`      | Preview the production build locally  |
+| `npm run lint`         | Run ESLint                            |
+| `npm run lint:fix`     | Run ESLint with autofix               |
+| `npm run format`       | Format all files with Prettier        |
+| `npm run format:check` | Check formatting without writing      |
+| `npm run test`         | Run Vitest in watch mode              |
+| `npm run test:run`     | Run the test suite once               |
+| `npm run test:ui`      | Run Vitest with the UI                |
+| `npm run coverage`     | Run tests with coverage               |
 
-### `npm run eject`
+## Project structure
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+```
+app_1/
+├── index.html              # Vite entry HTML (project root)
+├── vite.config.js          # Vite + Vitest config
+├── eslint.config.js        # ESLint 9 flat config
+├── .prettierrc.json        # Prettier config
+├── public/                 # Static assets (favicon, manifest, icons)
+└── src/
+    ├── main.jsx            # App entry (createRoot + StrictMode)
+    ├── App.jsx             # Root component
+    ├── App.css
+    ├── index.css
+    ├── logo.svg
+    ├── App.test.jsx        # Component tests
+    └── test/
+        └── setup.js        # Testing Library / jest-dom setup
+```
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Testing
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+Tests use Vitest with React Testing Library and `@testing-library/jest-dom` matchers, running in a jsdom environment. The setup file (`src/test/setup.js`) registers the matchers and runs `cleanup()` after each test.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+```bash
+npm run test:run
+```
 
-## Learn More
+## What changed compared to the original
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+- **Build tool:** Create React App (`react-scripts@3.2.0`) → Vite 8.
+- **React:** 16.10 → 19; `ReactDOM.render` → `createRoot` with `<StrictMode>`.
+- **Entry point:** `src/index.js` → `src/main.jsx`; removed the legacy `import React` (new JSX runtime).
+- **Service worker:** removed the unused CRA `serviceWorker.js`.
+- **HTML:** moved `index.html` to the project root, replaced `%PUBLIC_URL%` with root-relative paths, added the module script entry.
+- **Tooling added:** ESLint 9 flat config, Prettier 3, Vitest 4 + Testing Library with real component tests.
+- **Security:** 223 → 0 vulnerabilities.
+- **Outbound link:** `reactjs.org` → `react.dev`.
